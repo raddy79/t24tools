@@ -1,0 +1,84 @@
+    
+SUBROUTINE HMM.TO.SL
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_F.HELPTEXT.MAINMENU
+    $INSERT I_F.HELPTEXT.MENU
+
+    GOSUB INIT
+    LOOP 
+        GOSUB GET.INPUT
+    UNTIL COMI = 99
+    REPEAT
+
+RETURN
+
+GET.INPUT:
+    CRT @(-1)
+    PRINT @(5,4) : " HMM to SL : " : OPTION.HM
+    PRINT @(5,6) : "1. HM Only"
+    PRINT @(5,7) : "2. ALL : HMM, HM, ENQ, VER, ECS, ETS"
+    PRINT @(5,8) : "99. EXIT"
+    
+    CALL TXTINP('Input Options / HELPTEXT.MAINMENU : ', 8, 22,32, 'ANY')
+
+    IF COMI = 99 THEN RETURN
+    
+    BEGIN CASE
+
+    CASE COMI = 1
+        OPTION.HM = "HM.ONLY"
+    CASE COMI = 2
+        OPTION.HM = "ALL"
+    CASE 1
+        HMM.NAME = COMI        
+        GOSUB PROCESS
+    END CASE
+
+    RETURN
+
+
+INIT:
+    FN.HMM = "F.HELPTEXT.MAINMENU"
+    F.HMM = ""
+    CALL OPF(FN.HMM,F.HMM)
+
+    FN.HM = "F.HELPTEXT.MENU"
+    F.HM = ""
+    CALL OPF(FN.HM,F.HM)
+
+    OPEN '', '&SAVEDLISTS&' TO SAVEDLISTS ELSE
+        PRINT 'CANNOT OPEN &SAVEDLISTS&'
+    END
+
+    OPTION.HM = "HM.ONLY"
+
+    RETURN    
+
+PROCESS:    
+
+    CALL F.READ(FN.HMM, HMM.NAME, R.HMM, F.HMM, HMM.ERR)
+
+    IF HMM.ERR THEN
+        * exit 
+    END ELSE
+        APP.HMM = R.HMM<EB.MME.ID.OF.HELP.MENU> 
+        LOOP
+            REMOVE APP.ID FROM APP.HMM SETTING ID.POS
+        WHILE APP.ID:ID.POS    
+
+            CALL READ.HM(APP.ID, HM.LIST, HM.SL, HM.ALL.SL)
+
+            IF OPTION.HM = "ALL" THEN 
+                WRITE HM.ALL.SL TO SAVEDLISTS, HMM.NAME : '.SL'
+            END ELSE
+                WRITE HM.SL TO SAVEDLISTS, HMM.NAME : '.SL'
+            END
+        REPEAT
+    END
+
+
+    RETURN
+
+
+END
