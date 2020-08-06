@@ -2,9 +2,15 @@
 SUBROUTINE HM.TO.SL
     $INSERT I_COMMON
     $INSERT I_EQUATE
+    $INSERT I_F.HELPTEXT.MENU
 
     GOSUB INIT
-100:
+    LOOP 
+        GOSUB GET.INPUT
+    UNTIL COMI = 99
+
+
+GET.INPUT:
     CRT @(-1)
     PRINT @(5,4) : " HM to SL : " : OPTION.HM
     PRINT @(5,6) : "1. HM Only"
@@ -19,10 +25,8 @@ SUBROUTINE HM.TO.SL
 
     CASE COMI = 1
         OPTION.HM = "HM.ONLY"
-        GOTO 100
     CASE COMI = 2
         OPTION.HM = "ALL"
-        GOTO 100
     CASE 1
         HM.NAME = COMI        
         GOSUB PROCESS
