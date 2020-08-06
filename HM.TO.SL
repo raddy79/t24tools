@@ -1,0 +1,56 @@
+    
+SUBROUTINE HM.TO.SL
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+
+    GOSUB INIT
+100:
+    CRT @(-1)
+    PRINT @(5,4) : " HM to SL : " : OPTION.HM
+    PRINT @(5,6) : "1. HM Only"
+    PRINT @(5,7) : "2. ALL : HM, ENQ, VER, ECS, ETS"
+    PRINT @(5,8) : "99. EXIT"
+    
+    CALL TXTINP('Input Options / HELPTEXT.MENU : ', 8, 22,32, 'ANY')
+
+    IF COMI = 99 THEN RETURN
+    
+    BEGIN CASE
+
+    CASE COMI = 1
+        OPTION.HM = "HM.ONLY"
+        GOTO 100
+    CASE COMI = 2
+        OPTION.HM = "ALL"
+        GOTO 100
+    CASE 1
+        HM.NAME = COMI        
+        GOSUB PROCESS
+    END CASE
+
+
+INIT:
+    FN.HM = "F.HELPTEXT.MENU"
+    F.HM = ""
+    CALL OPF(FN.HM,F.HM)
+
+    OPEN '', '&SAVEDLISTS&' TO SAVEDLISTS ELSE
+        PRINT 'CANNOT OPEN &SAVEDLISTS&'
+    END
+
+    OPTION.HM = "HM.ONLY"
+
+    RETURN    
+
+PROCESS:    
+    CALL READ.HM(HM.NAME, HM.LIST, HM.SL, HM.ALL.SL)
+
+    IF OPTION.HM = "ALL" THEN 
+        WRITE HM.ALL.SL TO SAVEDLISTS, HM.NAME : '.SL'
+    END ELSE
+        WRITE HM.SL TO SAVEDLISTS, HM.NAME : '.SL'
+    END
+    RETURN
+
+
+END

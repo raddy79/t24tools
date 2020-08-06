@@ -1,0 +1,80 @@
+        
+SUBROUTINE READ.HM(HM.NAME, HM.LIST, HM.SL, HM.ALL)
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_F.HELPTEXT.MENU
+
+    GOSUB CHECK.IF.HM
+
+RETURN 
+
+CHECK.IF.HM:
+    GOSUB INIT
+
+    HM.ERR = ''
+    R.HM = ''
+    CALL F.READ(FN.HM, HM.NAME, R.HM, F.HM, HM.ERR)
+    IF HM.ERR THEN
+        * exit recursion
+    END ELSE
+        GOSUB PROCESS
+    END
+
+    RETURN
+
+INIT:
+    FN.HM = "F.HELPTEXT.MENU"
+    F.HM = ""
+    CALL OPF(FN.HM,F.HM)
+
+    RETURN
+
+PROCESS:
+    APP.HM = R.HM<EB.MEN.APPLICATION> 
+    LOOP
+        REMOVE APP.ID FROM APP.HM SETTING ID.POS
+    WHILE APP.ID:ID.POS    
+
+        HM.ERR = ''
+        R.HM = ''
+        CALL F.READ(FN.HM, APP.ID, R.HM, F.HM, HM.ERR)
+        IF HM.ERR THEN 
+            * EXIT RECURSION
+            GOSUB SWITCH.APP
+        END ELSE
+            HM.LIST<-1> = APP.ID
+            HM.SL<-1> = 'HELPTEXT.MENU>' : APP.ID
+            HM.ALL<-1> = 'HELPTEXT.MENU>' : APP.ID
+            CALL READ.HM(APP.ID, HM.LIST, HM.SL, HM.ALL)
+        END
+
+    REPEAT
+
+    RETURN
+
+SWITCH.APP:
+    BEGIN CASE
+
+    * ENQUIRY
+    CASE APP.ID[1,4] = "ENQ " OR APP.ID[1,6] = "QUERY " 
+        HM.ALL<-1> = 'ENQUIRY>' : FIELD(APP.ID, ' ', 2)
+
+    * COS
+    CASE APP.ID[1,4] = "COS " 
+        HM.ALL<-1> = 'EB.COMPOSITE.SCREEN>' : FIELD(APP.ID, ' ', 2)
+
+    * ETS
+    CASE APP.ID[1,4] = "TAB " 
+        HM.ALL<-1> = 'EB.TABBED.SCREEN>' : FIELD(APP.ID, ' ', 2)
+
+    * VERSION
+    CASE INDEX(APP.ID, ',', 1) > 0
+        HM.ALL<-1> = 'VERSION>' : FIELD(APP.ID, ' ', 1)
+
+    END CASE
+
+    RETURN
+END
+
+
+
