@@ -12,3 +12,12 @@ Converts HELPTEXT.MENU records into Saved List format.
 Todo : 
 1. Parse Composite screens
 2. Parse Version dropdown, eb.api, other details, next.version
+
+## TRICORDER
+Diagostic checks against a new T24 environment :
+1. whether a table exists
+2. whether a Record exists
+3. whether a field in a record contains a certain value
+
+Todo : 
+1. make it working
