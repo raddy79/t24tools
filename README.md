@@ -1,8 +1,8 @@
 # t24tools
 generic tools for t24
 
-## HM.TO.SL
-Converts HELPTEXT.MENU records into Saved List format.
+## HM.TO.SL & HMM.TO.SL
+Converts HELPTEXT.MENU or HELPTEXT.MAINMENU records into Saved List format.
 
 *Known Problems :*
 1. Enquiries with calculated Drilldowns not parsed
@@ -10,8 +10,9 @@ Converts HELPTEXT.MENU records into Saved List format.
 3. Composite Screen with recursive composite screen and enquiries not parsed.
 
 Todo : 
-1. Parse Composite screens
-2. Parse Version dropdown, eb.api, other details, next.version
+1. Parse Composite screens : Content
+2. Parse Version : dropdown, eb.api, other details, next.version
+3. Parse Enquiry : File.name Nofile to SS, Drill down
 
 ## TRICORDER
 Diagostic checks against a new T24 environment :
@@ -20,4 +21,4 @@ Diagostic checks against a new T24 environment :
 3. whether a field in a record contains a certain value
 
 Todo : 
-1. make it working
+1. make it work
